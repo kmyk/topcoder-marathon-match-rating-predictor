@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.0
+// @version      1.1
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @include      https://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -215,6 +215,10 @@ function main(): void {
     standings['title'].getElementsByTagName('td')[0].colSpan += 3;
     for (const name of [ 'Current Rating', 'Predicted Rating', 'Rating Delta' ]) {
         const tag = document.createElement('td');
+        tag.classList.add('tableHeader');
+        tag.width = '20%';
+        tag.align = 'center';
+        tag.noWrap = true;
         tag.textContent = name;
         standings['header'].appendChild(tag);
     }
