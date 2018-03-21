@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.2
+// @version      1.3
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @include      https://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -190,7 +190,8 @@ function predictRatings(rows) {
     for (const coder of coders) {
         const num = coder['rating'] + coder['weight'] * coder['perfAs'];
         const den = 1 + coder['weight'];
-        coder['predictedRating'] = num / den;
+        const cap = coder['rating'] + coder['cap'];
+        coder['predictedRating'] = Math.min(cap, num / den);
         coder['ratingDelta'] = coder['predictedRating'] - coder['rating'];
     }
     // The new volatility of the coder is calculated:
