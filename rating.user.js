@@ -104,6 +104,11 @@ function fetchStats(rows) {
  * @see https://community.topcoder.com/longcontest/?module=Static&d1=support&d2=ratings
  */
 function predictRatings(rows) {
+    // sort for the cases when rows are not sorted by Rank
+    rows = rows.slice();
+    rows.sort((row1, row2) => {
+        return row1['rank'] - row2['rank']; // TODO: if their `Rank' are the same, we should compare with `Last Submission Time'
+    });
     // How Marathon Match ratings are calculated
     let coders = [];
     for (const coder of rows) {
