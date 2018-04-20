@@ -110,7 +110,10 @@ function predictRatings(rows) {
         const stats = coder['stats'];
         const content = stats['result']['content'];
         if (typeof content != "string"
+            && content
+            && 'DATA_SCIENCE' in content
             && 'MARATHON_MATCH' in content['DATA_SCIENCE']
+            && 'rank' in content['DATA_SCIENCE']['MARATHON_MATCH']
             && content['DATA_SCIENCE']['MARATHON_MATCH']['rank']['competitions'] != 0) {
             const rank = content['DATA_SCIENCE']['MARATHON_MATCH']['rank'];
             coder['rating'] = rank['rating'];
