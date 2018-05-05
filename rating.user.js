@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.5
+// @version      1.4
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @include      https://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -119,7 +119,6 @@ function predictRatings(rows) {
             && 'DATA_SCIENCE' in content
             && 'MARATHON_MATCH' in content['DATA_SCIENCE']
             && 'rank' in content['DATA_SCIENCE']['MARATHON_MATCH']
-            && content['DATA_SCIENCE']['MARATHON_MATCH']['rank'] != null
             && content['DATA_SCIENCE']['MARATHON_MATCH']['rank']['competitions'] != 0) {
             const rank = content['DATA_SCIENCE']['MARATHON_MATCH']['rank'];
             coder['rating'] = rank['rating'];
