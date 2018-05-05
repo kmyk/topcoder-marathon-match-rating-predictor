@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.4
+// @version      1.5
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @include      https://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -80,9 +80,9 @@ function fetchStats(rows) {
                 promises.push(getMemberStats(rows[i + connection]['handle']));
             }
             // add a cell as a progress bar
-            let rank = { 'competitions': 0 };
+            let rank = null;
             try {
-                rank = stats['result']['content']['DATA_SCIENCE']['MARATHON_MATCH']['rank'];
+                rank = stats['result']['content']['DATA_SCIENCE']['MARATHON_MATCH']['rank']; // it may be null
             }
             catch (e) {
                 if (e instanceof TypeError) {
@@ -91,6 +91,9 @@ function fetchStats(rows) {
                 else {
                     throw e;
                 }
+            }
+            if (rank == null) {
+                rank = { 'competitions': 0 };
             }
             const tag = document.createElement('td');
             tag.classList.add('statLt');
@@ -119,6 +122,7 @@ function predictRatings(rows) {
             && 'DATA_SCIENCE' in content
             && 'MARATHON_MATCH' in content['DATA_SCIENCE']
             && 'rank' in content['DATA_SCIENCE']['MARATHON_MATCH']
+            && content['DATA_SCIENCE']['MARATHON_MATCH']['rank'] != null
             && content['DATA_SCIENCE']['MARATHON_MATCH']['rank']['competitions'] != 0) {
             const rank = content['DATA_SCIENCE']['MARATHON_MATCH']['rank'];
             coder['rating'] = rank['rating'];
