@@ -4,7 +4,7 @@
 // @version      1.5
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
-// @include      https://community.topcoder.com/longcontest/?*module=ViewStanding*
+// @match        *://community.topcoder.com/longcontest/?*module=ViewStanding*
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jstat/1.7.1/jstat.min.js
 // ==/UserScript==
 
