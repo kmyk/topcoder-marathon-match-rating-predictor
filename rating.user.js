@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.6
+// @version      1.7
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @match        *://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -44,14 +44,34 @@ function getStandings() {
     };
 }
 function getMemberStats(handle) {
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        const url = 'https://api.topcoder.com/v3/members/' + handle + '/stats';
-        xhr.open('GET', url);
-        xhr.onload = function () {
-            resolve(JSON.parse(this.response));
-        };
-        xhr.send();
+    return __awaiter(this, void 0, void 0, function* () {
+        const key = 'rating-predictor/' + handle;
+        if (key in localStorage) {
+            const data = JSON.parse(localStorage.getItem(key));
+            if (data['epoch'] + 24 * 60 * 60 * 1000 < Date.now) {
+                localStorage.removeItem(key); // expired
+            }
+        }
+        if (key in localStorage) {
+            const data = JSON.parse(localStorage.getItem(key));
+            return new Promise((resolve, reject) => {
+                resolve(data['stats']);
+            });
+        }
+        else {
+            yield sleep(0.3);
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                const url = 'https://api.topcoder.com/v3/members/' + handle + '/stats';
+                xhr.open('GET', url);
+                xhr.onload = function () {
+                    const stats = JSON.parse(this.response);
+                    localStorage.setItem(key, JSON.stringify({ 'epoch': Date.now(), 'stats': stats }));
+                    resolve(stats);
+                };
+                xhr.send();
+            });
+        }
     });
 }
 function sleep(sec) {
@@ -69,15 +89,14 @@ function fetchStats(rows) {
         let promises = [];
         const connection = 3;
         for (let i = 0; i < Math.min(rows.length, connection); ++i) {
-            promises.push(getMemberStats(rows[i]['handle']));
+            promises.push(yield getMemberStats(rows[i]['handle']));
         }
         for (let i = 0; i < rows.length; ++i) {
             const stats = yield promises[i];
             rows[i]['stats'] = stats;
             console.log(stats);
-            yield sleep(0.2);
             if (i + connection < rows.length) {
-                promises.push(getMemberStats(rows[i + connection]['handle']));
+                promises.push(yield getMemberStats(rows[i + connection]['handle']));
             }
             // add a cell as a progress bar
             let rank = null;
