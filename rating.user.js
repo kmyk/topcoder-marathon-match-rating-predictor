@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         TopCoder Marathon Match Rating Predictor
 // @namespace    https://github.com/kmyk
-// @version      1.7
+// @version      1.8
 // @description  predict rating changes of TopCoder Marathon Match
 // @author       Kimiyuki Onaka
 // @match        *://community.topcoder.com/longcontest/?*module=ViewStanding*
@@ -48,7 +48,7 @@ function getMemberStats(handle) {
         const key = 'rating-predictor/' + handle;
         if (key in localStorage) {
             const data = JSON.parse(localStorage.getItem(key));
-            if (data['epoch'] + 24 * 60 * 60 * 1000 < Date.now) {
+            if (data['epoch'] + 24 * 60 * 60 * 1000 < Date.now()) {
                 localStorage.removeItem(key); // expired
             }
         }
